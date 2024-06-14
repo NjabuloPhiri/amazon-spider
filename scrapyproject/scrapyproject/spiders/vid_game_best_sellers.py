@@ -42,21 +42,19 @@ class VidGameBestSellersSpider(scrapy.Spider):
             # (2) price
             one = best_seller.css("span")
             two = best_seller.css("span")
-            product_name = one.css("span.a-size-small.a-color-base::text").get()
+            product_name = one.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
             price = two.css("span.p13n-sc-price::text").get()
 
             yield {
-                "product_name": product_name,
-                "price": price,
+                "product_name": product_name, "price": price,
+                
             }
-
-            # yield {
-            #     "product_name": best_seller.css("._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y ::text").get(),
-            #     "price": best_seller.css("//span[@class='_cDEzb_p13n-sc-price_3mJ9Z']/text()").get(),
-            # }
     
     # TO-DO: 
     # 14/06/2024
     # Further work the script so that the data saved to the csv file is clean.
 
-    
+    # Key TakeAways:
+    # Scrapy shell is a powerful tool that helps fine-tune the 
+    # selection of the elements, so as to extract the relevant
+    # data.
