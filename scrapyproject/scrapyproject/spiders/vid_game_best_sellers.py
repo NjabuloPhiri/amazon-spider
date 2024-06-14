@@ -42,11 +42,18 @@ class VidGameBestSellersSpider(scrapy.Spider):
             # (2) price
             one = best_seller.css("span")
             two = best_seller.css("span")
-            product_name = one.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
-            price = two.css("span.p13n-sc-price::text").get()
+            all_names = response.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').getall()
+            unique_names = list(set(all_names))
+            # response.xpath(//div[@class="_cDEzb_p13n-sc-css-line-clamp-1_1Fn1y"]/span[not(contains(text(), 'Xbox Series X') or contains(text(), 'PlayStation 4') or contains(text(), 'No Operating System') or contains(text(), 'Xbox') or contains(text(), 'Mac') or contains(text(), 'Windows'))]/text())
 
+            # 
+            # 
+            # 
+            # product_name = one.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
+            price = two.css("span.p13n-sc-price::text").get()
+            
             yield {
-                "product_name": product_name, "price": price,
+                "product_name": unique_names, "price": price,
                 
             }
     
