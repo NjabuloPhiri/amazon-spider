@@ -46,9 +46,6 @@ class VidGameBestSellersSpider(scrapy.Spider):
             unique_names = list(all_names)
             # response.xpath(//div[@class="_cDEzb_p13n-sc-css-line-clamp-1_1Fn1y"]/span[not(contains(text(), 'Xbox Series X') or contains(text(), 'PlayStation 4') or contains(text(), 'No Operating System') or contains(text(), 'Xbox') or contains(text(), 'Mac') or contains(text(), 'Windows'))]/text())
 
-            # 
-            # 
-            # 
             # product_name = one.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
             price = two.css("span.p13n-sc-price::text").get()
             
@@ -58,10 +55,5 @@ class VidGameBestSellersSpider(scrapy.Spider):
             }
     
     # TO-DO: 
-    # 14/06/2024
-    # Further work the script so that the data saved to the csv file is clean.
-
-    # Key TakeAways:
-    # Scrapy shell is a powerful tool that helps fine-tune the 
-    # selection of the elements, so as to extract the relevant
-    # data.
+    # 15/06/2024
+    # Use Item Loaders to process the data yielded by the Spider.
