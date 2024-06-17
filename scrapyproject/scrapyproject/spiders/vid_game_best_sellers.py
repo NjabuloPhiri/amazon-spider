@@ -1,5 +1,5 @@
 import scrapy
-from scrapy import Selector
+from scrapyproject.items import ScrapyprojectItem
 
 
 class VidGameBestSellersSpider(scrapy.Spider):
@@ -36,23 +36,40 @@ class VidGameBestSellersSpider(scrapy.Spider):
         # ☝🏾 The query above returns all the product prices for
         # best sellers in the video games category.
 
+        # Create instance of an item as test, initially
+        item = ScrapyprojectItem()
+
+        # for best_seller in response.css("div.a-row"): # This is the <div> class wrapping all best-sellers
+        #     # We want to extract:
+        #     # (1) product_name,
+        #     # (2) price
+        #     one = best_seller.css("span")
+        #     two = best_seller.css("span")
+        #     item['all_names'] = response.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y:not(.a-size-small)::text').getall()
+        #     # unique_names = list(all_names)
+        #     # response.xpath(//div[@class="_cDEzb_p13n-sc-css-line-clamp-1_1Fn1y"]/span[not(contains(text(), 'Xbox Series X') or contains(text(), 'PlayStation 4') or contains(text(), 'No Operating System') or contains(text(), 'Xbox') or contains(text(), 'Mac') or contains(text(), 'Windows'))]/text())
+
+        #     # product_name = one.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
+        #     item['price'] = two.css("span.p13n-sc-price::text").get()
+            
+        #     yield item
+
         for best_seller in response.css("div.a-row"): # This is the <div> class wrapping all best-sellers
             # We want to extract:
             # (1) product_name,
             # (2) price
-            one = best_seller.css("span")
-            two = best_seller.css("span")
-            all_names = response.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').getall()
-            unique_names = list(all_names)
-            # response.xpath(//div[@class="_cDEzb_p13n-sc-css-line-clamp-1_1Fn1y"]/span[not(contains(text(), 'Xbox Series X') or contains(text(), 'PlayStation 4') or contains(text(), 'No Operating System') or contains(text(), 'Xbox') or contains(text(), 'Mac') or contains(text(), 'Windows'))]/text())
 
-            # product_name = one.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
-            price = two.css("span.p13n-sc-price::text").get()
-            
-            yield {
-                "product_name": unique_names, "price": price,
-                
-            }
+            # Extract product_name
+            product_name = best_seller.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
+        
+            # Extract price
+            price = best_seller.css("span.p13n-sc-price::text").get()
+        
+            # Store in item dictionary
+            item['product_name'] = product_name
+            item['price'] = price
+        
+            yield item
     
     # TO-DO: 
     # 15/06/2024
