@@ -8,9 +8,11 @@ from itemloaders.processors import MapCompose, Join
 
 
 # Define a function to filter nested CSS classes
+value = "div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y"
 def filter_nested_css_class(value):
     if ".a-size-small" in value:
-        return value.replace(".a-size-small", ",")
+        # Temporarily print value variable for debugging purposes
+        print(value.replace(".a-size-small", ","))
     
 
 class ScrapyprojectItem(scrapy.Item):
