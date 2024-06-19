@@ -28,34 +28,86 @@ class VidGameBestSellersSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        # The `parse()` method takes raw contents in the `response`
-        # variable and yields/returns the parsed data after applying
-        # the relevant parsing.
-        
-        # response.xpath("//div/span[contains(@class, 'p13n-sc-price')]").getall()
-        # ☝🏾 The query above returns all the product prices for
-        # best sellers in the video games category.
+        product_list = []
+        price_list = []
 
-        # Create instance of an item as test, initially
-        item = ScrapyprojectItem()
-
-        for best_seller in response.css("div.a-row"): # This is the <div> class wrapping all best-sellers
-            # We want to extract:
-            # (1) product_name,
-            # (2) price
-
+        for best_seller in response.css("div.a-row.a-size-small"):
             # Extract product_name
             product_name = best_seller.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
+            test_product = best_seller.xpath('//*[contains(@id,"")]/div/div/a/span/div/text()').getall()
+            
+            
+            # Extract price (assuming you have the correct selector for price)
+            price = best_seller.css('span.p13n-sc-price::text').getall()
+            test_price = best_seller.xpath('//span[@class="p13n-sc-price"]/text()').getall()
+            for i in test_price:
+                price_list.append(i)
+            
+            # Remove '.a-size-small' CSS class
+            if best_seller.css('.a-size-small'):
+                if best_seller.css('span.a-color-secondary'):
+                    return None
+                best_seller = best_seller.get().replace('a-size-small', '')
+
+            
+            for i in test_product:
+                product_list.append(i)
+
+            print(f'Product: {product_list}')
+            print(f'Price: {price_list}')
+            # print(f"Product: {test_product}, Price: {price}")
+
+            for product, price in zip(product_list, price_list):
+                yield {
+                    'product_name': product,
+                    'price': price
+                }
+
+
+    # def parse(self, response):
+    #     # The `parse()` method takes raw contents in the `response`
+    #     # variable and yields/returns the parsed data after applying
+    #     # the relevant parsing.
         
-            # Extract price
-            price = best_seller.css("span.p13n-sc-price::text").get()
+    #     # response.xpath("//div/span[contains(@class, 'p13n-sc-price')]").getall()
+    #     # ☝🏾 The query above returns all the product prices for
+    #     # best sellers in the video games category.
+
+    #     # Create instance of an item as test, initially
+    #     item = ScrapyprojectItem()
+
+    #     # manufacturer = []
+    #     for best_seller in response.css("div.a-row"): # This is the <div> class wrapping all best-sellers
+    #         # We want to extract:
+    #         # (1) product_name,
+    #         # (2) price
+
+    #         # Extract product_name
+            
+    #         product_name = best_seller.css('div._cDEzb_p13n-sc-css-line-clamp-1_1Fn1y::text').get()
+            
+    #         # print(f"Product name: {product_name}")
+    #         # Extract price
+    #         price = best_seller.css("span.p13n-sc-price::text").get()
         
-            # Store in item dictionary
-            item['product_name'] = product_name
-            item['price'] = price
+    #         # Store in item dictionary
+    #         item['product_name'] = product_name
+    #         # item['price'] = price
         
-            yield item
-    
+    #         # print(f"Manufacturer: {manufacturer}")
+
+    #         # misc = response.css('.a-size-small::text').get()
+    #         # for i in response.css('.a-size-small::text').getall():
+    #         #     print(f"Misc: {i.replace(i, "")}")
+    #         yield item
+
     # TO-DO: 
-    # 15/06/2024
-    # Use Item Loaders to process the data yielded by the Spider.
+    # 19/06/2024
+    # - Got the data to be cleaner and precise with product name
+    # selection.
+    # - Use Item Loaders to process the data yielded by the Spider.
+    # - Must still clean up script so that it makes use of items
+    # and item loaders.
+    # - Lastly, look into the strange behavior of the output in 
+    # Test.csv. Currently, the product names don't always match 
+    # the prices.
